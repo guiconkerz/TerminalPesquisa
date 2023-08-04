@@ -1,47 +1,27 @@
 using Microsoft.Data.SqlClient;
-using Microsoft.Data.SqlClient.Server;
-using Microsoft.IdentityModel.Logging;
-using System.Data;
-using System.Data.SqlClient;
-using System.Drawing.Text;
-using System.Windows.Forms;
-using static System.ComponentModel.Design.ObjectSelectorEditor;
-using System.IO;
-using Microsoft.IdentityModel.Tokens;
-using System.Reflection.Metadata;
-using System.Xml;
-using Microsoft.Identity.Client;
-using System.Configuration;
-using System.Diagnostics;
 namespace TerminalPesquisa
 {
-    public partial class Form1 : Form
+    public partial class Principal : Form
     {
+        #region Variaveis
         private static string[] pesquisados = new string[6];
         private static SqlConnection conn;
         string[] row = new string[6];
         String path = @".\itensPesquisados.txt";
+        #endregion
 
-        public Form1()
+        #region Construtor
+        public Principal()
         {
             InitializeComponent();
             GerarGradelstPesquisa();
-
         }
+        #endregion
 
+        #region Eventos
         private void Form1_Load(object sender, EventArgs e)
         {
             Properties.Settings.Default.stringConexao = @"Data Source=" + Properties.Settings.Default.Instancia + ";Initial Catalog=" + Properties.Settings.Default.Banco + ";User ID=" + Properties.Settings.Default.Usuario + ";Password=" + Properties.Settings.Default.Senha + ";Encrypt=False";
-        }
-
-        private void btnPesquisar_Click(object sender, EventArgs e)
-        {
-
-            lstPesquisa.Clear();
-            PreencheListViewPesquisa();
-            PreencheLstItensPesquisados();
-            ArmazenaItens();
-            LimpaFormulario();
         }
 
         private void txtPesquisaProd_KeyPress(object sender, KeyPressEventArgs e)
@@ -58,6 +38,116 @@ namespace TerminalPesquisa
 
         }
 
+        private void lstPesquisa_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            ListView.SelectedListViewItemCollection itens_selecionado = lstPesquisa.SelectedItems;
+            foreach (ListViewItem item in itens_selecionado)
+            {
+                txtId.Text = item.SubItems[0].Text;
+                txtValorProd.Text = item.SubItems[2].Text;
+                txtUnProd.Text = item.SubItems[3].Text;
+                txtCodBarra.Text = item.SubItems[4].Text;
+                if (item.SubItems[5].Text == "Ativo")
+                {
+                    txtStatus.Text = "Ativo";
+                }
+                else if (item.SubItems[5].Text == "Inativo")
+                {
+                    txtStatus.Text = "Inativo";
+                }
+
+            }
+        }
+
+        private void lstItensPesquisados_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            ListView.SelectedListViewItemCollection itens_selecionado = lstItensPesquisados.SelectedItems;
+            foreach (ListViewItem item in itens_selecionado)
+            {
+                txtId.Text = item.SubItems[0].Text;
+                txtValorProd.Text = item.SubItems[2].Text;
+                txtUnProd.Text = item.SubItems[3].Text;
+                txtCodBarra.Text = item.SubItems[4].Text;
+                txtStatus.Text = item.SubItems[5].Text;
+            }
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            switch (keyData)
+            {
+                case Keys.Control | Keys.Enter:
+                    btnPesquisar.PerformClick();
+                    break;
+                case Keys.Delete:
+                    btnLimpar.PerformClick();
+                    break;
+                case Keys.F4:
+                    btnConfiguracao.PerformClick();
+                    break;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        #endregion
+
+        #region Botões
+        private void btnPesquisar_Click(object sender, EventArgs e)
+        {
+
+            lstPesquisa.Clear();
+            PreencheListViewPesquisa();
+            PreencheLstItensPesquisados();
+            ArmazenaItens();
+            LimpaFormulario();
+        }
+
+        private void btnConfiguracao_Click(object sender, EventArgs e)
+        {
+            Regedit config = new Regedit();
+            config.Show();
+        }
+
+        private void pbFechar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+                Application.Exit();
+
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("Erro de exceção: " + ex.Message, "Erro de exceção", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void pbMinimizar_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+            this.MinimumSize = this.Size;
+        }
+
+        private void btnLimpar_Click(object sender, EventArgs e)
+        {
+            LimpaFormulario();
+            lstPesquisa.Clear();
+            lstItensPesquisados.Items.Clear();
+        }
+
+        private void pbDuvidas_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Enter -> Pesquisar\n\nF4 -> Abrir configurações\n\nDelete -> Limpar formulário", "Atalhos", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        #endregion
+
+        #region Métodos
         private void GerarGradelstPesquisa()
         {
             lstPesquisa.View = View.Details;
@@ -196,27 +286,6 @@ namespace TerminalPesquisa
             GerarGradelstPesquisa();
         }
 
-        private void lstPesquisa_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
-        {
-            ListView.SelectedListViewItemCollection itens_selecionado = lstPesquisa.SelectedItems;
-            foreach (ListViewItem item in itens_selecionado)
-            {
-                txtId.Text = item.SubItems[0].Text;
-                txtValorProd.Text = item.SubItems[2].Text;
-                txtUnProd.Text = item.SubItems[3].Text;
-                txtCodBarra.Text = item.SubItems[4].Text;
-                if (item.SubItems[5].Text == "Ativo")
-                {
-                    txtStatus.Text = "Ativo";
-                }
-                else if (item.SubItems[5].Text == "Inativo")
-                {
-                    txtStatus.Text = "Inativo";
-                }
-
-            }
-        }
-
         private void ArmazenaItens()
         {
             try
@@ -256,80 +325,6 @@ namespace TerminalPesquisa
                 MessageBox.Show("Erro de exceção: " + ex.Message, "Erro de exceção", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-        private void btnLimpar_Click(object sender, EventArgs e)
-        {
-            LimpaFormulario();
-            lstPesquisa.Clear();
-            lstItensPesquisados.Items.Clear();
-        }
-
-        private void lstItensPesquisados_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
-        {
-            ListView.SelectedListViewItemCollection itens_selecionado = lstItensPesquisados.SelectedItems;
-            foreach (ListViewItem item in itens_selecionado)
-            {
-                txtId.Text = item.SubItems[0].Text;
-                txtValorProd.Text = item.SubItems[2].Text;
-                txtUnProd.Text = item.SubItems[3].Text;
-                txtCodBarra.Text = item.SubItems[4].Text;
-                txtStatus.Text = item.SubItems[5].Text;
-
-            }
-        }
-
-        private void btnConfiguracao_Click(object sender, EventArgs e)
-        {
-            Regedit config = new Regedit();
-            config.Show();
-        }
-
-        private void pbFechar_Click(object sender, EventArgs e)
-        {
-            try
-            {
-
-                if (File.Exists(path))
-                {
-                    File.Delete(path);
-                }
-                Application.Exit();
-
-            }
-            catch (Exception ex)
-            {
-
-                MessageBox.Show("Erro de exceção: " + ex.Message, "Erro de exceção", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void pbMinimizar_Click(object sender, EventArgs e)
-        {
-            this.WindowState = FormWindowState.Minimized;
-            this.MinimumSize = this.Size;
-        }
-
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            switch (keyData)
-            {
-                case Keys.Control | Keys.Enter:
-                    btnPesquisar.PerformClick();
-                    break;
-                case Keys.Delete:
-                    btnLimpar.PerformClick();
-                    break;
-                case Keys.F4:
-                    btnConfiguracao.PerformClick();
-                    break;
-            }
-            return base.ProcessCmdKey(ref msg, keyData);
-        }
-
-        private void pbDuvidas_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Enter -> Pesquisar\n\nF4 -> Abrir configurações\n\nDelete -> Limpar formulário", "Atalhos", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
+        #endregion
     }
 }

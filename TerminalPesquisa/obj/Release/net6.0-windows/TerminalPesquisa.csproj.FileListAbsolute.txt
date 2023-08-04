@@ -72,7 +72,6 @@ C:\Users\gtmbe\source\repos\TerminalPesquisa\TerminalPesquisa\bin\Release\net6.0
 C:\Users\gtmbe\source\repos\TerminalPesquisa\TerminalPesquisa\bin\Release\net6.0-windows\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\gtmbe\source\repos\TerminalPesquisa\TerminalPesquisa\bin\Release\net6.0-windows\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
 C:\Users\gtmbe\source\repos\TerminalPesquisa\TerminalPesquisa\obj\Release\net6.0-windows\TerminalPesquisa.csproj.AssemblyReference.cache
-C:\Users\gtmbe\source\repos\TerminalPesquisa\TerminalPesquisa\obj\Release\net6.0-windows\TerminalPesquisa.Form1.resources
 C:\Users\gtmbe\source\repos\TerminalPesquisa\TerminalPesquisa\obj\Release\net6.0-windows\TerminalPesquisa.Properties.Resources.resources
 C:\Users\gtmbe\source\repos\TerminalPesquisa\TerminalPesquisa\obj\Release\net6.0-windows\TerminalPesquisa.Regedit.resources
 C:\Users\gtmbe\source\repos\TerminalPesquisa\TerminalPesquisa\obj\Release\net6.0-windows\TerminalPesquisa.csproj.GenerateResource.cache
@@ -86,3 +85,4 @@ C:\Users\gtmbe\source\repos\TerminalPesquisa\TerminalPesquisa\obj\Release\net6.0
 C:\Users\gtmbe\source\repos\TerminalPesquisa\TerminalPesquisa\obj\Release\net6.0-windows\TerminalPesquisa.pdb
 C:\Users\gtmbe\source\repos\TerminalPesquisa\TerminalPesquisa\obj\Release\net6.0-windows\TerminalPesquisa.genruntimeconfig.cache
 C:\Users\gtmbe\source\repos\TerminalPesquisa\TerminalPesquisa\obj\Release\net6.0-windows\ref\TerminalPesquisa.dll
+C:\Users\gtmbe\source\repos\TerminalPesquisa\TerminalPesquisa\obj\Release\net6.0-windows\TerminalPesquisa.Principal.resources
